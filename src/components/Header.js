@@ -1,17 +1,28 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { withRouter, Link } from 'react-router-dom'
 import Hamburger from './Hamburger'
 
-const Header = () => {
+const Header = ({ history }) => {
+  // State for menu
   const [state, setState] = useState({
     initial: false,
     clicked: null,
     menuName: 'Menu'
   })
 
+  //State for disabled buttom
   const [disabled, setDisabled] = useState(false)
 
+  //Use effect for pages change
+  useEffect(() => {
+    //listen for page changes
+    history.listen(() => {
+      setState({ clicked: false, menuName: 'Menu' })
+    })
+  })
+
   const handleMenu = () => {
+    disableMenu()
     if (state.initial === false) {
       setState({
         initial: null,
@@ -30,6 +41,13 @@ const Header = () => {
       })
     }
   }
+  // Menü butonumuzun devre dışı bırakılıp bırakılmayacağını belirleme
+  const disableMenu = () => {
+    setDisabled(!disabled)
+    setTimeout(() => {
+      setDisabled(false)
+    }, 1200)
+  }
 
   return (
     <header>
@@ -40,14 +58,16 @@ const Header = () => {
               <Link to="/">HUMBRG.</Link>
             </div>
             <div className="menu">
-              <button onClick={handleMenu}>Menu</button>
+              <button disable={disabled} onClick={handleMenu}>
+                Menu
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <Hamburger />
+      <Hamburger state={state} />
     </header>
   )
 }
 
-export default Header
+export default withRouter(Header)
