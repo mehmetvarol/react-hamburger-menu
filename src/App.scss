@@ -101,7 +101,7 @@ header {
       height: 100%;
       overflow: hidden;
 
-      .menu-city-background{
+      .menu-city-background {
         top: 0;
         left: 0;
         right: 0;
@@ -112,6 +112,9 @@ header {
         // opacity: 0;
         background-size: cover;
         background-repeat: no-repeat;
+        animation-name: backgroundEffect;
+        animation-duration: 30s;
+        animation-iteration-count: infinite;
 
       }
 
@@ -177,18 +180,17 @@ header {
             margin-top: 16px;
             font-size: 0.8rem;
             font-weight: 600;
-  
+
             span {
-              cursor: pointer;
-  
               &:first-child {
                 margin-left: 64px;
               }
-  
+
+              cursor: pointer;
               font-weight: 400;
               margin: 0 32px;
               transition: 0.3s ease-in-out;
-  
+
               &:hover {
                 color: #fff;
                 background: $black;

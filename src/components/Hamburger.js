@@ -2,6 +2,20 @@ import React, { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 
+import dallas from '../images/dallas.webp'
+import austin from '../images/austin.webp'
+import beijing from '../images/beijing.webp'
+import newyork from '../images/newyork.webp'
+import sanfrancisco from '../images/sanfrancisco.webp'
+
+const cities = [
+  { name: 'Dallas', image: dallas },
+  { name: 'Austin', image: austin },
+  { name: 'Beijing', image: beijing },
+  { name: 'New York', image: newyork },
+  { name: 'San Francisco', image: sanfrancisco }
+]
+
 const Hamburger = ({ state }) => {
   // Animasyon değişkenleri
   let menu = useRef(null)
@@ -46,7 +60,7 @@ const Hamburger = ({ state }) => {
       fadeInUp(info)
       staggerText(line1, line2, line3)
     }
-  },[state])
+  }, [state])
 
   const staggerReveal = (node1, node2) => {
     gsap.from([node1, node2], {
@@ -56,13 +70,13 @@ const Hamburger = ({ state }) => {
       skewY: 2,
       ease: 'power3.inOut',
       stagger: {
-        amount: 0.1 
+        amount: 0.1
       }
     })
   }
   const staggerText = (node1, node2, node3) => {
     gsap.from([node1, node2, node3], {
-      duration: 0.6, 
+      duration: 0.6,
       y: 100,
       delay: 0.2,
       stagger: {
@@ -70,13 +84,57 @@ const Hamburger = ({ state }) => {
       }
     })
   }
-  const fadeInUp = (node) => {
+  const fadeInUp = node => {
     gsap.from(node, {
-      y:60,
-      duration:1,
-      delay:0.2,
-      opacity:0,
-      ease:"power3.inOut"
+      y: 60,
+      duration: 1,
+      delay: 0.2,
+      opacity: 0,
+      ease: 'power3.inOut'
+    })
+  }
+
+  const handleCity = city => {
+    gsap.to(cityBackground, {
+      duration: 0,
+      background: `url(${city}) center center`
+    })
+    gsap.to(cityBackground, {
+      duration: 0.4,
+      opacity: 1,
+      ease: 'power3.inOut'
+    })
+    gsap.from(cityBackground, {
+      duration: 0.4,
+      // skewY: 2,
+      transformOrigin: 'right top'
+    })
+  }
+
+  const handleCityReturn = () => {
+    gsap.to(cityBackground, {
+      duration: 0.4,
+      opacity: 0
+    })
+  }
+
+  // Hover on the link
+  const handleHover = e => {
+    gsap.to(e.target, {
+      duration: 0.3,
+      y: 3,
+      skewX: 4,
+      ease: 'power1.inOut'
+    })
+  }
+
+  // Hover off the link
+  const handleHoverExit = e => {
+    gsap.to(e.target, {
+      duration: 0.3,
+      y: -3,
+      skewX: 0,
+      ease: 'power1.inOut'
     })
   }
 
@@ -87,25 +145,40 @@ const Hamburger = ({ state }) => {
         className="menu-secondary-background-color"
       ></div>
       <div ref={el => (revealMenu = el)} className="menu-layer">
-        <div className="menu-city-background">
+        <div ref={el => (cityBackground = el)} className="menu-city-background">
           <div className="container">
             <div className="wrapper">
               <div className="menu-links">
                 <nav>
                   <ul>
                     <li>
-                      <Link ref={el => (line1 = el)} to="/opportunities">
+                      <Link
+                        onMouseEnter={e => handleHover(e)}
+                        onMouseOut={e => handleHoverExit(e)}
+                        ref={el => (line1 = el)}
+                        to="/opportunities"
+                      >
                         Opportunities
                       </Link>
                     </li>
                     <li>
-                      <Link ref={el => (line2 = el)} to="/solutions">
+                      <Link
+                        onMouseEnter={e => handleHover(e)}
+                        onMouseOut={e => handleHoverExit(e)}
+                        ref={el => (line2 = el)}
+                        to="/solutions"
+                      >
                         Solutions
                       </Link>
                     </li>
                     <li>
-                      <Link ref={el => (line3 = el)} to="/concat">
-                        Concat us
+                      <Link
+                        onMouseEnter={e => handleHover(e)}
+                        onMouseOut={e => handleHoverExit(e)}
+                        ref={el => (line3 = el)}
+                        to="/contact-us"
+                      >
+                        Contact us
                       </Link>
                     </li>
                   </ul>
@@ -121,11 +194,15 @@ const Hamburger = ({ state }) => {
                 </div>
                 <div className="locations">
                   Locations:
-                  <span>Dallas</span>
-                  <span>Austin</span>
-                  <span>New York</span>
-                  <span>San Francisco</span>
-                  <span>Beijing</span>
+                  {cities.map(el => (
+                    <span
+                      key={el.name}
+                      onMouseEnter={() => handleCity(el.image)}
+                      onMouseOut={() => handleCityReturn}
+                    >
+                      {el.name}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>

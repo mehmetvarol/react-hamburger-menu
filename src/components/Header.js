@@ -59,7 +59,7 @@ const Header = ({ history }) => {
             </div>
             <div className="menu">
               <button disable={disabled} onClick={handleMenu}>
-                Menu
+                {state.menuName}
               </button>
             </div>
           </div>
